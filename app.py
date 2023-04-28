@@ -44,7 +44,6 @@ def getposts():
 @app.route("/update/id/<id>",methods=["POST"])
 def updatepost(id):
     data = request.get_json()
-    print(id)
     id = id
     title = data["title"]
     content = data["content"]

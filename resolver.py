@@ -31,20 +31,43 @@ class Signup(Mutation):
         session.add(user)
         session.commit()
         print("User Created")
+        
+class CreatePost(Mutation):
+    class Arguments:
+        title = String(required = True)
+        content = String(requred = True)
+        
+    post = Field(Post)
+        
+    def mutate(title,content,token):
+        user_id = validate_user(token=token)
+        if user_id!= None:
+            post = Post(title=title, content=content, author_id=user_id)
+            session = Session()
+            session.add(post)
+            session.commit()
+            return("Post Created")
+        else:
+            return("User not allowed")       
+    
+    
 
 class UpdatePost(Mutation):
-    class Arguments:
-        id = Int(required = True)
-        title = String(required=True)
-        content = String(required=True)
+     class Arguments:
+         id = Int(required = True)
+         title = String(required=True)
+         content = String(required=True)
 
-    post = Field(Post)
-
-    def mutate(id,title, content,token):
+     def mutate(id,title, content,token):
         user_id = validate_user(token = token)
-        if user_id!= None:
-            session = Session()
-            session.query(Post).filter(id = id).update(title =title,content =content)
+        session = Session()
+        post = session.query(Post).filter_by(author_id = user_id, id = id).first()
+        if post:
+            print(post)
+            post.title = title
+            post.content = content
+            session.add(post)
+            session.commit()
             return ("Post updated")
         else:
             return("User not allowed")

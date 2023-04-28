@@ -44,7 +44,7 @@ def validate_user(token):
             expiry = data['exp']
             if expiry > int(datetime.utcnow().timestamp()):
                 session = Session()
-                user = session.query(User).filter_by(username=username).first
+                user = session.query(User).filter_by(username=username).first()
                 return user.id
             else:
                 pass
