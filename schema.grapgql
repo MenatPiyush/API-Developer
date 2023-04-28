@@ -1,0 +1,43 @@
+type User{
+    id: ID!   
+    username: String!
+    email: String!
+    password: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+    posts: [Post!]!
+}
+
+type Post{
+    id: ID!
+    title: String!
+    content: String!
+    author_id: User!
+    creted_at: DateTime!
+    updated_at: DateTime!
+    comments: [PostComment!]!
+}
+
+type PostComment{
+    id: ID!
+    post_id: Post!
+    author_id: User!
+    content: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type Query{
+    posts:[Post!]!
+    post(id:ID!): Post
+}
+
+type Mutation{
+    signup(username: String!,email: String!, password: String!): String
+    login(username: String!,password: String!): String
+    createpost(title: String!,content: String!): Post
+    updatepost(id: ID!, title: String, content: String!): Post
+    deletepost(id: ID!): Boolean!
+}
+
+
