@@ -49,3 +49,10 @@ def updatepost(id):
     content = data["content"]
     token = data["token"]
     return resolver.UpdatePost.mutate(id = id,title = title,content = content,token = token)
+
+@app.route("/delete/id/<id>",methods=["Delete"])
+def deletepost(id):
+    data = request.get_json()
+    id = id
+    token = data["token"]
+    return resolver.DeletePost.mutate(id = id,token = token)

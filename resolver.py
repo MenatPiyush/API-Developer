@@ -72,4 +72,18 @@ class UpdatePost(Mutation):
         else:
             return("User not allowed")
   
-   
+class DeletePost(Mutation):
+    class Arguments:
+        id = Int(required = True)
+    
+    def mutate(id,token):
+        user_id = validate_user(token = token)
+        session = Session()
+        post = session.query(Post).filter_by(author_id = user_id, id = id).first()
+        if post:
+            print(post)
+            session.delete(post)
+            session.commit()
+            return ("Post deleted")
+        else:
+            return("Post does not exist or user is not authorized")
