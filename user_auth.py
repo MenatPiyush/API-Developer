@@ -1,14 +1,13 @@
-from datetime import datetime, timedelta
-from graphene import String,Mutation
+from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import jwt
-from flask import request, jsonify
 from models import User, Post
+import os
 
 
 # Create an engine and sessionmaker for the database
-engine = create_engine("mysql://root:root@localhost:3306/blogpost")
+engine = create_engine(os.environ['DATABASE_URL'])
 Session = sessionmaker(bind=engine)
 session = Session()
 

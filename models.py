@@ -12,8 +12,8 @@ class User(Base):
     password = Column(String)
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
-    #posts = relationship('Post',back_populates='author_id')
-    #comments = relationship('PostComment', back_populates='author_id')
+    #posts = relationship('Post',back_populates='author')
+    #comments = relationship('PostComment', back_populates='author')
     
     def __repr__(self):
         return f"<User {self.username}>"
@@ -42,8 +42,4 @@ class PostComment(Base):
     updated_at = Column(DateTime)
     #author = relationship('User',back_populates='comments')
     #post = relationship('Post',back_populates='comments')
-  
-
-#User.posts = relationship("Post", order_by=Post.id, back_populates="author")
-#User.comments = relationship("PostComment", order_by=PostComment.id, back_populates="author")
-#Post.comments = relationship("PostComment", order_by=PostComment.id, back_populates="post")    
+    

@@ -1,11 +1,10 @@
 from datetime import datetime, timedelta
-from graphene import ObjectType,Field, List, ID, String,Mutation, Int, Schema
+from graphene import ObjectType,Field, List,String,Mutation, Int, Schema
 from models import User,Post
 from user_auth import Session, validate_user,SECRET_KEY
 from graphene import relay
-from graphene_sqlalchemy import SQLAlchemyConnectionField, SQLAlchemyObjectType
+from graphene_sqlalchemy import SQLAlchemyObjectType
 import jwt
-from flask import request, jsonify
 
 class PostSchema(SQLAlchemyObjectType):
     class Meta:
