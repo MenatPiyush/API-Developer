@@ -11,7 +11,10 @@ This API performs functions like signup, login, create, update, delete, view all
  ```
  flask run
  ```
-
+ - The endpoint can be accessed by using the below link: 
+ ```
+ http://127.0.0.1:5000/graphql
+ ```
  - To sign-up user must send the following request: 
  ```
 mutation signup($username: String!, $email: String!, $password: String!) {
@@ -25,6 +28,7 @@ mutation signup($username: String!, $email: String!, $password: String!) {
  mutation login($username: String!, $password: String!) {
   login(username: $username, password: $password) {
     token
+    msg
   }
 }
  ```
@@ -69,12 +73,12 @@ query{
    - User can view a single post by sending the below request. Users can also specify the fields as shown in the second query
  ```
 query{
-  post(id=$id){}
+  post(id:$id){}
 }
 ```
 ```
 query{
-  post(id=$id){
+  post(id:$id){
   title
   content
 }

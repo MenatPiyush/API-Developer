@@ -125,9 +125,9 @@ class Login(Mutation):
         username = String(required=True)
         password = String(required=True)
     
-    token = String()
     msg = String()
-
+    token = String()
+    
     def mutate(self,info,username, password):
         session = Session()
         user = session.query(User).filter_by(username=username).first()
@@ -137,7 +137,8 @@ class Login(Mutation):
                 'exp': datetime.utcnow() + timedelta(days=1)
             }
             token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
-            return Login(token = token)
+            msg ="Use the token in auth header"
+            return Login(token = token,msg = msg)
         else:
             msg = "User not allowed"
             return Login(msg = msg)
