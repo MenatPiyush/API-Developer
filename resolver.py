@@ -73,30 +73,38 @@ class CreatePost(Mutation):
     
 
 class UpdatePost(Mutation):
-     class Arguments:
-         id = Int(required = True)
-         title = String(required=True)
-         content = String(required=True)
+    class Arguments:
+        id = Int(required = True)
+        title = String(required=True)
+        content = String(required=True)
+    
+    msg = String()
 
-     def mutate(id,title, content,token):
+    def mutate(self,info, id,title, content):
+        auth_header = info.context.headers.get('Authorization')
+        token = auth_header.split(' ')[1] if auth_header else None
         user_id = validate_user(token = token)
         session = Session()
         post = session.query(Post).filter_by(author_id = user_id, id = id).first()
         if post:
-            print(post)
             post.title = title
             post.content = content
             session.add(post)
             session.commit()
-            return ("Post updated")
+            msg = "Post updated successfully"
+            return UpdatePost(msg = msg)
         else:
-            return("User not allowed")
+            msg = "User not allowed"
+            return UpdatePost(msg = msg)
   
 class DeletePost(Mutation):
     class Arguments:
         id = Int(required = True)
     
-    def mutate(id,token):
+    msg = String()
+    def mutate(self, info,id):
+        auth_header = info.context.headers.get('Authorization')
+        token = auth_header.split(' ')[1] if auth_header else None
         user_id = validate_user(token = token)
         session = Session()
         post = session.query(Post).filter_by(author_id = user_id, id = id).first()
@@ -104,9 +112,11 @@ class DeletePost(Mutation):
             print(post)
             session.delete(post)
             session.commit()
-            return ("Post deleted")
+            msg="Post deleted"
+            return DeletePost(msg=msg)
         else:
-            return("Post does not exist or user is not authorized")
+            msg="Post does not exist or user is not authorized"
+            return DeletePost(msg=msg)
 
 class Login(Mutation):
     class Arguments:
@@ -134,8 +144,8 @@ class Login(Mutation):
 class Mutation(ObjectType):
     signup = Signup.Field() 
     login = Login.Field()   
-    createPost = CreatePost.Field()
-    #deletePost = DeletePost.Field()
-    #updatepost = UpdatePost.Field()
+    createpost = CreatePost.Field()
+    deletePost = DeletePost.Field()
+    updatepost = UpdatePost.Field()
     
 schema = Schema(query=Query,mutation=Mutation)
