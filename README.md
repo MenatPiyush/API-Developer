@@ -9,7 +9,7 @@ This API performs functions like signup, login, create, update, delete, view all
  ```  
  - Finally run with  
  ```
- flask run
+ docker-compose up
  ```
  - The endpoint can be accessed by using the below link: 
  ```
