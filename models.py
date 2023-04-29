@@ -36,4 +36,8 @@ class PostComment(Base):
     updated_at = Column(DateTime)
     #author = relationship('User',back_populates='comments')
     #post = relationship('Post',back_populates='comments')
-    
+  
+
+#User.posts = relationship("Post", order_by=Post.id, back_populates="author")
+#User.comments = relationship("PostComment", order_by=PostComment.id, back_populates="author")
+#Post.comments = relationship("PostComment", order_by=PostComment.id, back_populates="post")    

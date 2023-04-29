@@ -3,6 +3,8 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 import resolver 
 from user_auth import Login
+from graphene import Schema
+from flask_graphql import GraphQLView
 
 app = Flask(__name__)
 CORS(app)
@@ -50,9 +52,54 @@ def updatepost(id):
     token = data["token"]
     return resolver.UpdatePost.mutate(id = id,title = title,content = content,token = token)
 
-@app.route("/delete/id/<id>",methods=["Delete"])
-def deletepost(id):
-    data = request.get_json()
-    id = id
-    token = data["token"]
-    return resolver.DeletePost.mutate(id = id,token = token)
+# @app.route("/delete/id/<id>",methods=["Delete"])
+# def deletepost(id):
+#     data = request.get_json()
+#     id = id
+#     token = data["token"]
+#     return resolver.DeletePost.mutate(id = id,token = token)
+
+# schema = Schema(query = resolver.Query)
+
+# @app.route('/blogpost',method=['POST'])
+# def blogpost():
+#     query = request.json.get('query')
+#     variables = request.json.get('variables')
+    
+#     result = schema.execute(query, variable_values=variables)
+    
+#     return jsonify(result.data)
+
+
+# query = ObjectType("Query")
+
+# query.set_field("getqueries", resolver.Query)
+
+# type_defs = load_schema_from_path("schema.graphql")
+# schema = make_executable_schema(
+#     type_defs, query, snake_case_fallback_resolvers
+# )
+
+
+# @app.route("/graphql", methods=["POST"])
+# def graphql_server():
+#     data = request.get_json()
+
+#     success, result = graphql_sync(
+#         schema,
+#         data,
+#         context_value=request,
+#         debug=app.debug
+#     )
+
+#     status_code = 200 if success else 400
+#     return jsonify(result), status_code
+
+app.add_url_rule(
+    "/graphql",
+    view_func=GraphQLView.as_view(
+        "graphql",
+        schema=resolver.schema,
+        graphiql=True
+    ),
+)

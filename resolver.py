@@ -1,17 +1,25 @@
 from datetime import datetime
-from graphene import ObjectType,Field, List, ID, String,Mutation, Int
+from graphene import ObjectType,Field, List, ID, String,Mutation, Int, Schema
 from models import User,Post
 from user_auth import Session, validate_user
+from graphene import relay
+from graphene_sqlalchemy import SQLAlchemyConnectionField, SQLAlchemyObjectType
+
+class PostSchema(SQLAlchemyObjectType):
+    class Meta:
+        model = Post
+        interfaces = (relay.Node,)
+        
 
 class Query(ObjectType):
-    posts = List(lambda: Post)
-    post = Field(lambda: Post, id=ID(required=True))
+    node = relay.Node.Field()
+    posts = List(lambda: PostSchema)
+    post = Field(lambda: PostSchema, id=String(required=True))
     
     def resolve_posts():
         session = Session()
         posts = session.query(Post).all()
-        result = [post for post in posts]
-        return (result)
+        return posts
     
     def resolve_post(id):
         session = Session()
@@ -87,3 +95,5 @@ class DeletePost(Mutation):
             return ("Post deleted")
         else:
             return("Post does not exist or user is not authorized")
+    
+schema = Schema(query=Query)

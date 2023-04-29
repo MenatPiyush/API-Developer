@@ -1,12 +1,11 @@
 from datetime import datetime, timedelta
-from graphene import ObjectType, Schema, Field, List, ID, String, DateTime, Boolean, Mutation
+from graphene import String,Mutation
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.exc import IntegrityError
-from passlib.hash import bcrypt
 import jwt
 from flask import request, jsonify
 from models import User, Post
+
 
 # Create an engine and sessionmaker for the database
 engine = create_engine("mysql://root:root@localhost:3306/blogpost")

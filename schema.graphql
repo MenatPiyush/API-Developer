@@ -1,5 +1,5 @@
 type User{
-    id: ID!   
+    id: String!   
     username: String!
     email: String!
     password: String!
@@ -9,7 +9,7 @@ type User{
 }
 
 type Post{
-    id: ID!
+    id: String!
     title: String!
     content: String!
     author_id: User!
@@ -19,7 +19,7 @@ type Post{
 }
 
 type PostComment{
-    id: ID!
+    id: String!
     post_id: Post!
     author_id: User!
     content: String!
@@ -29,15 +29,19 @@ type PostComment{
 
 type Query{
     posts:[Post!]!
-    post(id:ID!): Post
+    post(id:String!): Post
 }
 
 type Mutation{
     signup(username: String!,email: String!, password: String!): String
     login(username: String!,password: String!): String
-    createpost(title: String!,content: String!): Post
-    updatepost(id: ID!, title: String, content: String!): Post
-    deletepost(id: ID!): Boolean!
+    createpost(token: String!,title: String!,content: String!): Post
+    updatepost(token: String!,id: ID!, title: String, content: String!): Post
+    deletepost(token: String!id: ID!): Boolean!
 }
 
+schema {
+    query: Query
+    mutation: Mutation
+}
 
