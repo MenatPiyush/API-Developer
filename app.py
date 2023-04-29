@@ -1,8 +1,6 @@
-from flask import Flask,request, jsonify
+from flask import Flask
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
 import resolver 
-from graphene import Schema
 from flask_graphql import GraphQLView
 
 app = Flask(__name__)

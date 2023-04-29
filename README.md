@@ -1,6 +1,6 @@
 
-# Blogpost API Documentatio
-This AIP performs functions like signup,login,create,update,delete, view all and specific posts.
+# Blogpost API Documentation
+This API performs functions like signup, login, create, update, delete, view all and specific posts.
 
 ## To run this code
 - Install the project requirements with 

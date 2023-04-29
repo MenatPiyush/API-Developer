@@ -1,7 +1,12 @@
 from sqlalchemy import *
-from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+import os
 
+engine = create_engine('mysql://root:root@localhost:3306/blogpost')
+Session = sessionmaker(bind=engine)
+session = Session()
 Base = declarative_base()
 
 class User(Base):
@@ -12,8 +17,6 @@ class User(Base):
     password = Column(String)
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
-    #posts = relationship('Post',back_populates='author')
-    #comments = relationship('PostComment', back_populates='author')
     
     def __repr__(self):
         return f"<User {self.username}>"
@@ -26,8 +29,6 @@ class Post(Base):
     author_id = Column(Integer)
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
-    #author = relationship('User', back_populates='posts')
-    #comments = relationship('PostComment',back_populates='posts')
     
     def __repr__(self):
         return f"<User {self.title}>"
@@ -40,6 +41,3 @@ class PostComment(Base):
     post_id = Column(Integer)
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
-    #author = relationship('User',back_populates='comments')
-    #post = relationship('Post',back_populates='comments')
-    

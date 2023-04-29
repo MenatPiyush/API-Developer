@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 from graphene import ObjectType,Field, List,String,Mutation, Int, Schema
-from models import User,Post
-from user_auth import Session, validate_user,SECRET_KEY
+from models import User,Post,Session
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 import jwt
@@ -54,7 +53,7 @@ class CreatePost(Mutation):
         title = String(required = True)
         content = String(required = True)
         
-    post = Field(PostSchema)
+    msg = String()
         
     def mutate(self,info,title,content):
         auth_header = info.context.headers.get('Authorization')
@@ -65,9 +64,11 @@ class CreatePost(Mutation):
             session = Session()
             session.add(post)
             session.commit()
-            return CreatePost(post)
+            msg ="Post Updated successfully"
+            return CreatePost(msg=msg)
         else:
-            return("User not allowed")       
+            msg = "User not allowed"
+            return CreatePost(msg=msg)       
     
     
 
@@ -95,6 +96,7 @@ class UpdatePost(Mutation):
         else:
             msg = "User not allowed"
             return UpdatePost(msg = msg)
+
   
 class DeletePost(Mutation):
     class Arguments:
@@ -116,6 +118,7 @@ class DeletePost(Mutation):
         else:
             msg="Post does not exist or user is not authorized"
             return DeletePost(msg=msg)
+        
 
 class Login(Mutation):
     class Arguments:
@@ -148,3 +151,22 @@ class Mutation(ObjectType):
     updatepost = UpdatePost.Field()
     
 schema = Schema(query=Query,mutation=Mutation)
+
+
+SECRET_KEY = 'shyftlabs'
+
+def validate_user(token):
+    if token:
+        try:
+            data = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+            username = data['username']
+            expiry = data['exp']
+            if expiry > int(datetime.utcnow().timestamp()):
+                session = Session()
+                user = session.query(User).filter_by(username=username).first()
+                return user.id
+            else:
+                pass
+        except (jwt.exceptions.InvalidSignatureError, jwt.exceptions.DecodeError):
+            pass
+    return None
