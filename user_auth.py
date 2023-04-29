@@ -14,26 +14,6 @@ session = Session()
 
 SECRET_KEY = 'shyftlabs'
 
-class Login(Mutation):
-    class Arguments:
-        username = String(required=True)
-        password = String(required=True)
-
-    token = String()
-
-    def mutate(username, password):
-        user = session.query(User).filter_by(username=username).first()
-        if password == user.password:
-            payload = {
-                'username': str(user.username),
-                'exp': datetime.utcnow() + timedelta(days=1)
-            }
-            token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
-        else:
-            print("no match")
-
-        return jsonify({"jwt_token": token})
-
 
 def validate_user(token):
     if token:
